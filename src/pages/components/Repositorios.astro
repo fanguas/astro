@@ -1,0 +1,97 @@
+---
+type Repositorio = {
+  _id: string;
+  name: string;
+  created_at: string;
+  updated_at: string;
+};
+
+async function obtenerRepositorios(): Promise<any[]> {
+  const respuesta = await fetch("http://127.0.0.1:8000/github/");
+  if (!respuesta.ok) {
+    throw new Error("No se pudieron obtener los repositorios");
+  }
+
+  const datos = await respuesta.json();
+  console.log(datos);
+  const repositorios = datos.repositories;
+  return repositorios;
+}
+
+const repositorios = await obtenerRepositorios();
+
+---
+<style>
+  /* Contenedor de todas las cards */
+.container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 4 cards por fila */
+  gap: 20px;
+  padding: 20px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Card individual */
+.repo-card {
+  display: flex;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 16px;
+  background-color: #f9f9f9;
+  height: auto;
+}
+
+/* Lado izquierdo: info */
+.repo-info {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Lado derecho: imagen */
+.repo-image-container {
+  width: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .container {
+    grid-template-columns: 1fr;
+  }
+  .repo-card {
+    flex-direction: column;
+    height: auto;
+  }
+  .repo-info, .repo-image-container {
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+}
+</style>
+
+<div class="container">
+  {repositorios.map((repositorio) => (
+    <div class="repo-card">
+      <!-- Lado izquierdo: info -->
+      <div class="repo-info">
+        <h5>{repositorio.name}</h5>
+      </div>
+      <!-- Lado derecho: imagen -->
+      <div class="repo-image-container">
+      </div>
+    </div>
+  ))}
+</div>
